@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Food House — Панель оператора</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="stylesheet" href="styles.css">
+<link rel="icon" href="photos/logo.jpg">
+</head>
+<body class="admin-body">
+
+<div class="admin-wrap">
+  <header class="admin-header">
+    <img src="photos/logo.jpg" alt="" class="admin-logo">
+    <h1>Панель оператора</h1>
+  </header>
+
+  <!-- ВХОД -->
+  <section id="loginBox" class="admin-card">
+    <h2>Вход</h2>
+    <label>Email
+      <input type="email" id="opEmail" autocomplete="username" placeholder="operator@foodhouse.kz">
+    </label>
+    <label>Пароль
+      <input type="password" id="opPass" autocomplete="current-password" placeholder="••••••••">
+    </label>
+    <button id="loginBtn" class="admin-btn">Войти</button>
+    <p id="loginError" class="admin-error"></p>
+  </section>
+
+  <!-- ПАНЕЛЬ -->
+  <section id="panelBox" class="admin-card" style="display:none">
+    <div class="admin-panel-head">
+      <h2>Наличие товаров</h2>
+      <button id="logoutBtn" class="admin-btn-ghost">Выйти</button>
+    </div>
+    <p class="admin-hint">Выключите товар — он сразу пропадёт из заказа у всех клиентов и появится пометка «Нет в наличии».</p>
+    <div id="itemsList" class="admin-items"></div>
+    <p id="saveStatus" class="admin-save-status"></p>
+  </section>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+<script src="firebase-config.js"></script>
+<script src="menu-data.js"></script>
+<script src="operator.js"></script>
+</body>
+</html>
