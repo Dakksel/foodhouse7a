@@ -2,7 +2,7 @@
    FOOD HOUSE — menu data + cart + WhatsApp redirect
    ===================================================== */
 
-const PHONE = "77051367685"; // international format, no "+"
+const PHONE = "77001114856"; // international format, no "+"
 
 /* ---------- 0. CONFIG ---------- */
 const DELIVERY_THRESHOLD = 4000;  // ₸ — orders at or above this get free delivery
@@ -36,7 +36,6 @@ function renderMenu(){
       const off = state.unavailable.has(item.id);
       return `
         <div class="card ${off?'out-of-stock':''}">
-          ${item.photoUrl ? `<img src="${item.photoUrl}" alt="${item.name}" class="card-img" loading="lazy">` : ""}
           <div class="card-body">
             <h3>${item.name}</h3>
             ${off ? `<p class="out-badge">Нет в наличии</p>` : `<p class="desc">&nbsp;</p>`}

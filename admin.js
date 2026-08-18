@@ -8,7 +8,6 @@ const $ = sel => document.querySelector(sel);
 
 const auth        = firebase.auth();
 const db          = firebase.firestore();
-const storage     = firebase.storage();
 const STATUS_DOC  = db.collection("status").doc("menu");
 const MENU_DOC    = db.collection("menu").doc("structure");
 
@@ -71,14 +70,6 @@ function renderMenuEditor(){
 
       ${items.filter(it=>it.catId===cat.id).map(item => `
         <div class="admin-price-row" data-item-id="${item.id}">
-          <div class="admin-photo-cell">
-            ${item.photoUrl
-              ? `<img src="${escapeAttr(item.photoUrl)}" class="admin-item-thumb" alt="">`
-              : `<span class="admin-photo-placeholder">Нет фото</span>`}
-            <input type="file" accept="image/*" class="admin-photo-input" data-item-id="${item.id}" hidden>
-            <button type="button" class="admin-btn-small admin-upload-photo" data-item-id="${item.id}">${item.photoUrl ? 'Заменить' : '+ Фото'}</button>
-            ${item.photoUrl ? `<button type="button" class="admin-btn-small admin-del-photo" data-item-id="${item.id}">Удалить фото</button>` : ""}
-          </div>
           <input type="text" class="admin-item-name-input" data-item-id="${item.id}" value="${escapeAttr(item.name)}">
           <input type="number" class="admin-price-input" data-item-id="${item.id}" value="${item.price}" min="1" step="10">
           <span class="admin-price-currency">₸</span>
@@ -195,42 +186,6 @@ async function addCategory(name, color){
   await saveMenu(next);
 }
 
-/* ---------- ФОТО ПОЗИЦИЙ ---------- */
-async function uploadItemPhoto(itemId, file){
-  const status = $("#saveStatus");
-  if(!file) return;
-  if(!file.type.startsWith("image/")){
-    status.textContent = "Выберите файл изображения (JPG, PNG, WEBP).";
-    return;
-  }
-  if(file.size > 5 * 1024 * 1024){
-    status.textContent = "Файл слишком большой — максимум 5 МБ.";
-    return;
-  }
-  status.textContent = "Загрузка фото…";
-  try{
-    const ref = storage.ref().child(`menu-photos/${itemId}.jpg`);
-    await ref.put(file, { contentType: file.type });
-    const url = await ref.getDownloadURL();
-    const next = cloneFlat(menuFlat);
-    const item = next.items.find(i=>i.id===itemId);
-    if(item) item.photoUrl = url;
-    await saveMenu(next);
-  }catch(e){
-    console.error(e);
-    status.textContent = "Ошибка загрузки фото. Проверьте интернет и правила Storage.";
-  }
-}
-
-async function removeItemPhoto(itemId){
-  if(!confirm("Удалить фото у этой позиции?")) return;
-  const next = cloneFlat(menuFlat);
-  const item = next.items.find(i=>i.id===itemId);
-  if(item) delete item.photoUrl;
-  await saveMenu(next);
-  try{ await storage.ref().child(`menu-photos/${itemId}.jpg`).delete(); }catch(e){ /* файла могло не быть — не критично */ }
-}
-
 /* ---------- ИНИЦИАЛИЗАЦИЯ ПАНЕЛИ ---------- */
 function initPanel(){
   if(unsubStatus) unsubStatus();
@@ -344,16 +299,6 @@ $("#menuEditor").addEventListener("click", e=>{
   const delItemBtn = e.target.closest(".admin-del-item");
   if(delItemBtn){ deleteItem(delItemBtn.dataset.itemId); return; }
 
-  const uploadPhotoBtn = e.target.closest(".admin-upload-photo");
-  if(uploadPhotoBtn){
-    const input = document.querySelector(`.admin-photo-input[data-item-id="${uploadPhotoBtn.dataset.itemId}"]`);
-    input.click();
-    return;
-  }
-
-  const delPhotoBtn = e.target.closest(".admin-del-photo");
-  if(delPhotoBtn){ removeItemPhoto(delPhotoBtn.dataset.itemId); return; }
-
   const addItemBtn = e.target.closest(".admin-add-item");
   if(addItemBtn){
     const catId = addItemBtn.dataset.catId;
@@ -368,13 +313,6 @@ $("#menuEditor").addEventListener("click", e=>{
     addCategory($("#newCatName").value, $("#newCatColor").value);
     return;
   }
-});
-
-$("#menuEditor").addEventListener("change", e=>{
-  const input = e.target.closest(".admin-photo-input");
-  if(!input) return;
-  const file = input.files && input.files[0];
-  uploadItemPhoto(input.dataset.itemId, file);
 });
 
 /* ---------- ВКЛАДКИ ---------- */
