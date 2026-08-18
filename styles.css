@@ -90,6 +90,7 @@ h1{margin:0;font-size:1.6rem;letter-spacing:2px;color:var(--yellow);text-transfo
   transition:transform .2s,box-shadow .2s;
 }
 .card:hover{transform:translateY(-4px);box-shadow:var(--shadow)}
+.card-img{width:100%;height:150px;object-fit:cover;display:block;background:#0c0c0c}
 .card-body{padding:14px;display:flex;flex-direction:column;flex:1}
 .card-body h3{margin:0 0 6px;font-size:1.1rem;color:#fff}
 .card-body .desc{margin:0 0 10px;color:var(--muted);font-size:.85rem;flex:1}
@@ -333,6 +334,15 @@ h1{margin:0;font-size:1.6rem;letter-spacing:2px;color:var(--yellow);text-transfo
   text-align:center;padding:24px 16px;border:1px dashed var(--border);border-radius:10px;
 }
 .admin-init-box p{color:var(--muted);margin:0 0 16px;font-size:.9rem}
+
+/* ===== ФОТО ПОЗИЦИЙ ===== */
+.admin-photo-cell{display:flex;align-items:center;gap:8px;flex:0 0 auto}
+.admin-item-thumb{width:44px;height:44px;object-fit:cover;border-radius:6px;border:1px solid var(--border)}
+.admin-photo-placeholder{
+  width:44px;height:44px;display:flex;align-items:center;justify-content:center;
+  font-size:.6rem;color:var(--muted);border:1px dashed var(--border);border-radius:6px;text-align:center;
+}
+.admin-del-photo{background:var(--red)}
 
 /* ===== RESPONSIVE ===== */
 @media (max-width:520px){
